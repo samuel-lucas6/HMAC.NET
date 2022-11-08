@@ -40,40 +40,43 @@ public static class Hmac
         if (key == null) { throw new ArgumentNullException(nameof(key), $"{nameof(key)} cannot be null."); }
         int blockSize = hashFunction == HashFunction.SHA256 ? 64 : 128;
         var ipad = new byte[blockSize];
-        for (int i = 0; i < ipad.Length; i++)
-        {
+        for (int i = 0; i < ipad.Length; i++) {
             ipad[i] = 0x36;
         }
         var opad = new byte[blockSize];
-        for (int i = 0; i < opad.Length; i++)
-        {
+        for (int i = 0; i < opad.Length; i++) {
             opad[i] = 0x5C;
         }
-        using var hashAlgorithm = CreateHashFunction(hashFunction);
+        var incrementalHash = IncrementalHash.CreateHash(GetHashAlgorithmName(hashFunction));
         var paddedKey = new byte[blockSize];
-        Array.Copy(key.Length > paddedKey.Length ? hashAlgorithm.ComputeHash(key) : key, paddedKey, key.Length > paddedKey.Length ? hashAlgorithm.HashSize / 8 : key.Length);
-        for (int i = 0; i < ipad.Length; i++)
-        {
+        if (key.Length > paddedKey.Length) {
+            incrementalHash.AppendData(key);
+            Array.Copy(incrementalHash.GetHashAndReset(), paddedKey, incrementalHash.HashLengthInBytes);
+        }
+        else {
+            Array.Copy(key, paddedKey, key.Length);
+        }
+        for (int i = 0; i < ipad.Length; i++) {
             ipad[i] ^= paddedKey[i];
         }
-        var keyConcatMessage = new byte[ipad.Length + message.Length];
-        Array.Copy(ipad, keyConcatMessage, ipad.Length);
-        Array.Copy(message, sourceIndex: 0, keyConcatMessage, destinationIndex: ipad.Length, message.Length);
-        byte[] innerHash = hashAlgorithm.ComputeHash(keyConcatMessage);
-        for (int i = 0; i < opad.Length; i++)
-        {
+        incrementalHash.AppendData(ipad);
+        incrementalHash.AppendData(message);
+        byte[] innerHash = incrementalHash.GetHashAndReset();
+        for (int i = 0; i < opad.Length; i++) {
             opad[i] ^= paddedKey[i];
         }
-        var keyConcatHash = new byte[opad.Length + innerHash.Length];
-        Array.Copy(opad, keyConcatHash, opad.Length);
-        Array.Copy(innerHash, sourceIndex: 0, keyConcatHash, destinationIndex: opad.Length, innerHash.Length);
-        return hashAlgorithm.ComputeHash(keyConcatHash);
+        incrementalHash.AppendData(opad);
+        incrementalHash.AppendData(innerHash);
+        return incrementalHash.GetHashAndReset();
     }
 
-    private static HashAlgorithm CreateHashFunction(HashFunction hashFunction)
+    private static HashAlgorithmName GetHashAlgorithmName(HashFunction hashFunction)
     {
-        if (hashFunction == HashFunction.SHA256) { return SHA256.Create(); }
-        if (hashFunction == HashFunction.SHA384) { return SHA384.Create(); }
-        return SHA512.Create();
+        return hashFunction switch
+        {
+            HashFunction.SHA256 => HashAlgorithmName.SHA256,
+            HashFunction.SHA384 => HashAlgorithmName.SHA384,
+            _ => HashAlgorithmName.SHA512
+        };
     }
 }
