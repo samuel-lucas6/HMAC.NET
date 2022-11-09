@@ -31,6 +31,28 @@ public class HMACTests
     }
     
     // https://www.rfc-editor.org/rfc/rfc4231#section-4
+    public static IEnumerable<object[]> Rfc4231Sha384()
+    {
+        yield return new object[] { Hmac.HashFunction.SHA384, "4869205468657265", "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b", "afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6" };
+        yield return new object[] { Hmac.HashFunction.SHA384, "7768617420646f2079612077616e7420666f72206e6f7468696e673f", "4a656665", "af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649" };
+        yield return new object[] { Hmac.HashFunction.SHA384, "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "88062608d3e6ad8a0aa2ace014c8a86f0aa635d947ac9febe83ef4e55966144b2a5ab39dc13814b94e3ab6e101a34f27" };
+        yield return new object[] { Hmac.HashFunction.SHA384, "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd", "0102030405060708090a0b0c0d0e0f10111213141516171819", "3e8a69b7783c25851933ab6290af6ca77a9981480850009cc5577c6e1f573b4e6801dd23c4a7d679ccf8a386c674cffb" };
+        // Truncated to 128 bits
+        // yield return new object[] { Hmac.HashFunction.SHA384, "546573742057697468205472756e636174696f6e", "0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c", "3abf34c3503b2a23a46efc619baef897" };
+        yield return new object[] { Hmac.HashFunction.SHA384, "54657374205573696e67204c6172676572205468616e20426c6f636b2d53697a65204b6579202d2048617368204b6579204669727374", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "4ece084485813e9088d2c63a041bc5b44f9ef1012a2b588f3cd11f05033ac4c60c2ef6ab4030fe8296248df163f44952" };
+        yield return new object[] { Hmac.HashFunction.SHA384, "5468697320697320612074657374207573696e672061206c6172676572207468616e20626c6f636b2d73697a65206b657920616e642061206c6172676572207468616e20626c6f636b2d73697a6520646174612e20546865206b6579206e6565647320746f20626520686173686564206265666f7265206265696e6720757365642062792074686520484d414320616c676f726974686d2e", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e799176d3860e6110c46523e" };
+    }
+    
+    // https://www.rfc-editor.org/rfc/rfc4868#section-2.7.2.2
+    public static IEnumerable<object[]> Rfc4868Sha384()
+    {
+        yield return new object[] { Hmac.HashFunction.SHA384, "4869205468657265", "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b", "b6a8d5636f5c6a7224f9977dcf7ee6c7fb6d0c48cbdee9737a959796489bddbc4c5df61d5b3297b4fb68dab9f1b582c2" };
+        yield return new object[] { Hmac.HashFunction.SHA384, "7768617420646f2079612077616e7420666f72206e6f7468696e673f", "4a6566654a6566654a6566654a6566654a6566654a6566654a6566654a6566654a6566654a6566654a6566654a656665", "2c7353974f1842fd66d53c452ca42122b28c0b594cfb184da86a368e9b8e16f5349524ca4e82400cbde0686d403371c9" };
+        yield return new object[] { Hmac.HashFunction.SHA384, "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "809f439be00274321d4a538652164b53554a508184a0c3160353e3428597003d35914a18770f9443987054944b7c4b4a" };
+        yield return new object[] { Hmac.HashFunction.SHA384, "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd", "0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f200a0b0c0d0e0f10111213141516171819", "5b540085c6e6358096532b2493609ed1cb298f774f87bb5c2ebf182c83cc7428707fb92eab2536a5812258228bc96687" };
+    }
+    
+    // https://www.rfc-editor.org/rfc/rfc4231#section-4
     public static IEnumerable<object[]> Rfc4231Sha512()
     {
         yield return new object[] { Hmac.HashFunction.SHA512, "4869205468657265", "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b", "87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854" };
@@ -55,6 +77,8 @@ public class HMACTests
     [TestMethod]
     [DynamicData(nameof(Rfc4231Sha256), DynamicDataSourceType.Method)]
     [DynamicData(nameof(Rfc4868Sha256), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(Rfc4231Sha384), DynamicDataSourceType.Method)]
+    [DynamicData(nameof(Rfc4868Sha384), DynamicDataSourceType.Method)]
     [DynamicData(nameof(Rfc4231Sha512), DynamicDataSourceType.Method)]
     [DynamicData(nameof(Rfc4868Sha512), DynamicDataSourceType.Method)]
     public void TestVectors(Hmac.HashFunction hashFunction, string message, string key, string tag)
